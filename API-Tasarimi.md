@@ -6,7 +6,7 @@ Bu doküman, Cinebilet projesinin OpenAPI Specification (OAS) 3.0 standardına g
 
 ---
 
-## OpenAPI Specification (YAML Formatı)
+## OpenAPI Specification
 
 ```yaml
 openapi: 3.0.3
