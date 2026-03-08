@@ -2,7 +2,7 @@
 
 **OpenAPI Spesifikasyon Dosyası:** [lamine.yaml](lamine.yaml)
 
-Bu doküman, Cinebilet projesinin OpenAPI Specification (OAS) 3.0 standardına göre hazırlanmış RESTful API tasarımını içermektedir. Tasarım; film, salon, seans ve kullanıcı biletleme gereksinimlerini kapsamaktadır.
+Bu doküman, OpenAPI Specification (OAS) 3.0 standardına göre hazırlanmış örnek bir API tasarımını içermektedir.
 
 ---
 
