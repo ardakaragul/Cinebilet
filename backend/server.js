@@ -9,6 +9,8 @@ const PORT = process.env.PORT || 3000;
 const moviesFilePath = path.join(__dirname, 'data', 'movies.json');
 const hallsFilePath = path.join(__dirname, 'data', 'halls.json');
 const sessionsFilePath = path.join(__dirname, 'data', 'sessions.json');
+const usersFilePath = path.join(__dirname, 'data', 'users.json');
+const ticketsFilePath = path.join(__dirname, 'data', 'tickets.json');
 
 app.use(cors());
 app.use(express.json());
@@ -166,6 +168,92 @@ app.delete('/sessions/:id', (req, res) => {
 
     fs.writeFileSync(sessionsFilePath, JSON.stringify(filteredSessions, null, 2));
     res.json({ message: "Seans başarıyla iptal edildi." });
+});
+// --- ARDA YILMAZ'IN GÖREVLERİ: KULLANICI VE BİLET SİSTEMİ ---
+
+// 1. KULLANICI KAYDI (POST /auth/register)
+app.post('/auth/register', (req, res) => {
+    const { name, email, password, phone } = req.body;
+    const users = JSON.parse(fs.readFileSync(usersFilePath, 'utf8'));
+
+    if (users.find(u => u.email === email)) return res.status(400).json({ message: "Bu e-posta kayıtlı!" });
+
+    const newUser = { id: Date.now().toString(), name, email, password, phone };
+    users.push(newUser);
+    fs.writeFileSync(usersFilePath, JSON.stringify(users, null, 2));
+    res.status(201).json({ message: "Üyelik başarıyla oluşturuldu!", user: newUser });
+});
+
+// 2. KULLANICI BİLGİLERİNİ GÖRÜNTÜLEME (GET /users/:userId)
+app.get('/users/:userId', (req, res) => {
+    const users = JSON.parse(fs.readFileSync(usersFilePath, 'utf8'));
+    const user = users.find(u => u.id === req.params.userId);
+    if (!user) return res.status(404).json({ message: "Kullanıcı bulunamadı." });
+    res.json(user);
+});
+
+// 3. KULLANICI BİLGİLERİNİ GÜNCELLEME (PUT /users/:userId)
+app.put('/users/:userId', (req, res) => {
+    const users = JSON.parse(fs.readFileSync(usersFilePath, 'utf8'));
+    const index = users.findIndex(u => u.id === req.params.userId);
+    if (index === -1) return res.status(404).json({ message: "Kullanıcı bulunamadı." });
+
+    users[index] = { ...users[index], ...req.body };
+    fs.writeFileSync(usersFilePath, JSON.stringify(users, null, 2));
+    res.json({ message: "Profil güncellendi!", user: users[index] });
+});
+
+// 4. KULLANICI HESABINI KAPATMA (DELETE /users/:userId)
+app.delete('/users/:userId', (req, res) => {
+    const users = JSON.parse(fs.readFileSync(usersFilePath, 'utf8'));
+    const filteredUsers = users.filter(u => u.id !== req.params.userId);
+    fs.writeFileSync(usersFilePath, JSON.stringify(filteredUsers, null, 2));
+    res.json({ message: "Hesap başarıyla silindi." });
+});
+
+// 5. BİLET SATIN ALMA (POST /tickets)
+app.post('/tickets', (req, res) => {
+    const { userId, sessionId, seatNumber } = req.body;
+    const tickets = JSON.parse(fs.readFileSync(ticketsFilePath, 'utf8'));
+
+    // Koltuk kontrolü: Bu koltuk bu seansta alınmış mı?
+    const isTaken = tickets.find(t => t.sessionId === sessionId && t.seatNumber === seatNumber);
+    if (isTaken) return res.status(400).json({ message: "Bu koltuk zaten dolu!" });
+
+    const newTicket = { id: Date.now().toString(), userId, sessionId, seatNumber, date: new Date() };
+    tickets.push(newTicket);
+    fs.writeFileSync(ticketsFilePath, JSON.stringify(tickets, null, 2));
+    res.status(201).json({ message: "Bilet başarıyla oluşturuldu!", ticket: newTicket });
+});
+
+// 6. BİLETLERİ LİSTELEME (GET /users/:userId/tickets)
+app.get('/users/:userId/tickets', (req, res) => {
+    const tickets = JSON.parse(fs.readFileSync(ticketsFilePath, 'utf8'));
+    const userTickets = tickets.filter(t => t.userId === req.params.userId);
+    res.json(userTickets);
+});
+
+// 7. BİLET İPTAL ETME (DELETE /tickets/:ticketId)
+app.delete('/tickets/:ticketId', (req, res) => {
+    const tickets = JSON.parse(fs.readFileSync(ticketsFilePath, 'utf8'));
+    const filteredTickets = tickets.filter(t => t.id !== req.params.ticketId);
+    fs.writeFileSync(ticketsFilePath, JSON.stringify(filteredTickets, null, 2));
+    res.json({ message: "Bilet iptal edildi, koltuk artık boş." });
+});
+
+// 8. MÜSAİT KOLTUKLARI GÖRÜNTÜLEME (GET /sessions/:sessionId/seats)
+app.get('/sessions/:sessionId/seats', (req, res) => {
+    const tickets = JSON.parse(fs.readFileSync(ticketsFilePath, 'utf8'));
+    // Bu seansa ait satılmış biletleri bul
+    const soldSeats = tickets
+        .filter(t => t.sessionId === req.params.sessionId)
+        .map(t => t.seatNumber);
+
+    res.json({
+        sessionId: req.params.sessionId,
+        soldSeats: soldSeats,
+        message: "Dolu koltuklar listelendi. Diğer koltuklar müsaittir."
+    });
 });
 // Sunucuyu Başlat
 app.listen(PORT, () => {
