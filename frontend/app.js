@@ -445,3 +445,39 @@ async function deleteMovie(movieId) {
         console.error(error);
     }
 }
+async function addHall(event) {
+    event.preventDefault();
+    const name = document.getElementById('hall-name').value;
+    const capacity = document.getElementById('hall-capacity').value;
+
+    try {
+        const response = await fetch('http://localhost:3000/halls', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, capacity: parseInt(capacity) })
+        });
+        if (response.ok) {
+            alert("Yeni salon başarıyla oluşturuldu!");
+            event.target.reset();
+        }
+    } catch (error) { console.error(error); }
+}
+
+async function addSession(event) {
+    event.preventDefault();
+    const movieId = document.getElementById('session-movie-id').value;
+    const hallId = document.getElementById('session-hall-id').value;
+    const startTime = document.getElementById('session-time').value;
+
+    try {
+        const response = await fetch('http://localhost:3000/sessions', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ movieId, hallId, startTime })
+        });
+        if (response.ok) {
+            alert("Seans başarıyla sisteme tanımlandı!");
+            event.target.reset();
+        }
+    } catch (error) { console.error(error); }
+}
