@@ -45,6 +45,25 @@
             </p>
         </div>
     </div>
+    <div id="seat-modal" class="modal-overlay">
+        <div class="modal-content" style="width: 500px;">
+            <span class="close-btn" onclick="closeSeatModal()">&times;</span>
+            <h2 style="margin-bottom: 20px;">Koltuk Seçimi</h2>
+            
+            <div class="screen">SİNEMA PERDESİ</div>
+            
+            <div id="seat-container" class="seat-container">
+                </div>
+            
+            <div class="legend">
+                <div class="seat-info"><div class="seat"></div> Boş</div>
+                <div class="seat-info"><div class="seat selected"></div> Seçili</div>
+                <div class="seat-info"><div class="seat sold"></div> Dolu</div>
+            </div>
+            
+            <button id="confirm-ticket-btn" class="buy-btn" style="margin-top: 30px;">Bileti Al</button>
+        </div>
+    </div>
     <script src="app.js"></script>
 </body>
 
