@@ -156,7 +156,7 @@ async function buyTicket(movieId) {
 
 function closeSeatModal() {
     document.getElementById('seat-modal').style.display = 'none';
-    selectedSeatNumber = null; // Seçimi sıfırla
+    selectedSeatNumber = null; 
 }
 
 
@@ -238,3 +238,133 @@ document.getElementById('confirm-ticket-btn').addEventListener('click', async ()
         console.error("Bilet alınırken hata:", error);
     }
 });
+document.getElementById('my-tickets-btn').addEventListener('click', async (e) => {
+    e.preventDefault();
+    const userId = localStorage.getItem('userId');
+    
+    if (!userId) {
+        alert("Profilinizi görmek için giriş yapmalısınız!");
+        document.getElementById('auth-modal').style.display = 'flex';
+        return;
+    }
+    
+    document.getElementById('profile-modal').style.display = 'flex';
+    await loadProfile(userId);
+    await loadTickets(userId);
+});
+
+function closeProfileModal() {
+    document.getElementById('profile-modal').style.display = 'none';
+}
+
+async function loadProfile(userId) {
+    try {
+        const response = await fetch(`http://localhost:3000/profile?userId=${userId}`);
+        if (response.ok) {
+            const data = await response.json();
+            document.getElementById('profile-name').value = data.name || '';
+            document.getElementById('profile-email').value = data.email || '';
+            document.getElementById('profile-phone').value = data.phone || '';
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function loadTickets(userId) {
+    const container = document.getElementById('tickets-container');
+    container.innerHTML = '<p>Biletler yükleniyor...</p>';
+    
+    try {
+        const response = await fetch(`http://localhost:3000/tickets?userId=${userId}`);
+        if (response.ok) {
+            const tickets = await response.json();
+            container.innerHTML = '';
+            
+            if (tickets.length === 0) {
+                container.innerHTML = '<p>Henüz satın alınmış bir biletiniz bulunmuyor.</p>';
+                return;
+            }
+
+            tickets.forEach(ticket => {
+                container.innerHTML += `
+                    <div class="ticket-card" id="ticket-${ticket.id}">
+                        <div class="ticket-info">
+                            <strong style="color:white; font-size:16px;">Seans ID:</strong> ${ticket.sessionId} <br>
+                            <strong>Koltuk No:</strong> <span style="color:#28a745;">${ticket.seatNumber}</span>
+                        </div>
+                        <button class="cancel-btn" onclick="cancelTicket('${ticket.id}')">İptal Et</button>
+                    </div>
+                `;
+            });
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function updateProfile(event) {
+    event.preventDefault();
+    const userId = localStorage.getItem('userId');
+    const name = document.getElementById('profile-name').value;
+    const email = document.getElementById('profile-email').value;
+    const phone = document.getElementById('profile-phone').value;
+
+    try {
+        const response = await fetch(`http://localhost:3000/profile?userId=${userId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, phone })
+        });
+
+        if (response.ok) {
+            alert("Profil bilgileriniz başarıyla güncellendi!");
+            localStorage.setItem('userName', name);
+            location.reload();
+        } else {
+            alert("Güncelleme başarısız oldu.");
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function cancelTicket(ticketId) {
+    if (!confirm("Bu bileti iptal etmek istediğinize emin misiniz?")) return;
+    
+    try {
+        const response = await fetch(`http://localhost:3000/tickets/${ticketId}`, {
+            method: 'DELETE'
+        });
+
+        if (response.ok) {
+            alert("Biletiniz başarıyla iptal edildi.");
+            document.getElementById(`ticket-${ticketId}`).remove();
+        } else {
+            alert("İptal işlemi başarısız oldu.");
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function deleteAccount() {
+    if (!confirm("Hesabınızı kalıcı olarak silmek istediğinize emin misiniz? Bütün biletleriniz yanacak!")) return;
+    
+    const userId = localStorage.getItem('userId');
+    
+    try {
+        const response = await fetch(`http://localhost:3000/profile?userId=${userId}`, {
+            method: 'DELETE'
+        });
+
+        if (response.ok) {
+            alert("Hesabınız silindi. Sizi özleyeceğiz...");
+            localStorage.removeItem('userName');
+            localStorage.removeItem('userId');
+            location.reload();
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}

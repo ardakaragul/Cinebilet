@@ -14,7 +14,7 @@
         <div class="logo">🎬 CineBilet</div>
         <nav>
             <a href="#">Ana Sayfa</a>
-            <a href="#">Biletlerim</a>
+            <a href="#" id="my-tickets-btn">Biletlerim</a>
             <a href="#" id="login-btn">Giriş Yap</a>
         </nav>
     </header>
@@ -64,6 +64,28 @@
             <button id="confirm-ticket-btn" class="buy-btn" style="margin-top: 30px;">Bileti Al</button>
         </div>
     </div>
+    <div id="profile-modal" class="modal-overlay">
+    <div class="modal-content" style="width: 600px;">
+        <span class="close-btn" onclick="closeProfileModal()">&times;</span>
+        <h2>Profilim ve Biletlerim</h2>
+
+        <div class="profile-section">
+            <h3 style="text-align: left; margin-bottom: 15px;">Bilgilerim</h3>
+            <form id="profile-form" onsubmit="updateProfile(event)">
+                <input type="text" id="profile-name" required>
+                <input type="email" id="profile-email" required>
+                <input type="text" id="profile-phone" required>
+                <button type="submit" class="buy-btn" style="background-color: #28a745;">Güncelle</button>
+            </form>
+            <button onclick="deleteAccount()" class="buy-btn" style="background-color: #dc3545; margin-top: 10px;">Hesabımı Sil</button>
+        </div>
+
+        <div class="tickets-section" style="margin-top: 30px; text-align: left;">
+            <h3 style="margin-bottom: 15px;">Biletlerim</h3>
+            <div id="tickets-container" class="tickets-grid"></div>
+        </div>
+    </div>
+</div>
     <script src="app.js"></script>
 </body>
 

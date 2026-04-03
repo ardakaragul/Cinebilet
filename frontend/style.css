@@ -231,3 +231,56 @@ h1 {
     cursor: default;
 }
 .seat-info .seat:hover { transform: none; }
+.profile-section form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.profile-section input {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #333;
+    background-color: #222;
+    color: white;
+    font-size: 14px;
+}
+
+.tickets-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.ticket-card {
+    background-color: #222;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid #e50914;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ticket-info {
+    font-size: 14px;
+    color: #ddd;
+}
+
+.cancel-btn {
+    background-color: transparent;
+    color: #e50914;
+    border: 1px solid #e50914;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.cancel-btn:hover {
+    background-color: #e50914;
+    color: white;
+}
