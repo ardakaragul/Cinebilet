@@ -1,9 +1,37 @@
 [
   {
-    "id": "1774565344681",
-    "title": "Dune: Çöl Gezegeni Bölüm İki",
-    "director": "Denis Villeneuve",
-    "durationMinutes": 166,
-    "posterUrl": "https://link.com/dune2.jpg"
+    "id": "1775254854468",
+    "title": "Prestij",
+    "director": "Christopher Nolan",
+    "durationMinutes": 130,
+    "posterUrl": "https://tr.web.img3.acsta.net/pictures/bzp/01/108998.jpg"
+  },
+  {
+    "id": "1775255050146",
+    "title": "Soysuzlar Çetesi",
+    "director": "Quentin Tarantino",
+    "durationMinutes": 153,
+    "posterUrl": "https://m.media-amazon.com/images/S/pv-target-images/0a06e016fa9067fdea66e9eadd39e467dfc4fd832e651f6033303514ca0f72f7.jpg"
+  },
+  {
+    "id": "1775255219989",
+    "title": "Dövüş Kulübü",
+    "director": "David Fincher",
+    "durationMinutes": 139,
+    "posterUrl": "https://m.media-amazon.com/images/M/MV5BOTgyOGQ1NDItNGU3Ny00MjU3LTg2YWEtNmEyYjBiMjI1Y2M5XkEyXkFqcGc@._V1_QL75_UX190_CR0,2,190,281_.jpg"
+  },
+  {
+    "id": "1775255374373",
+    "title": "Joker",
+    "director": " Todd Phillips",
+    "durationMinutes": 122,
+    "posterUrl": "https://tr.web.img2.acsta.net/c_310_420/pictures/19/09/11/16/43/1511539.jpg"
+  },
+  {
+    "id": "1775255596939",
+    "title": "V for Vendetta",
+    "director": " James McTeigue",
+    "durationMinutes": 130,
+    "posterUrl": "https://serkankoybasi.com/wp-content/uploads/2011/06/v-for-vendetta-film-afis.jpg"
   }
 ]

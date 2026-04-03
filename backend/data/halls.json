@@ -1,1 +1,27 @@
-[]
+[
+    {
+        "id": "1775255835288",
+        "name": "Salon 1",
+        "capacity": 70
+    },
+    {
+        "id": "1775255945557",
+        "name": "Salon 2",
+        "capacity": 70
+    },
+    {
+        "id": "1775256036666",
+        "name": "Salon 3",
+        "capacity": 70
+    },
+    {
+        "id": "1775256045024",
+        "name": "Salon 4",
+        "capacity": 70
+    },
+    {
+        "id": "1775256053390",
+        "name": "Salon 5",
+        "capacity": 70
+    }
+]

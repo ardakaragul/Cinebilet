@@ -1,1 +1,37 @@
-[]
+[
+    {
+        "id": "1775255892654",
+        "movieId": "1775254854468",
+        "hallId": "1775255835288",
+        "startTime": "2026-04-10T15:30",
+        "isCancelled": false
+    },
+    {
+        "id": "1775256019049",
+        "movieId": "1775255050146",
+        "hallId": "1775255945557",
+        "startTime": "2026-04-10T19:00",
+        "isCancelled": false
+    },
+    {
+        "id": "1775256096727",
+        "movieId": "1775255219989",
+        "hallId": "1775256036666",
+        "startTime": "2026-04-10T21:00",
+        "isCancelled": false
+    },
+    {
+        "id": "1775256151235",
+        "movieId": "1775255374373",
+        "hallId": "1775256045024",
+        "startTime": "2026-04-10T20:00",
+        "isCancelled": false
+    },
+    {
+        "id": "1775256224481",
+        "movieId": "1775255596939",
+        "hallId": "1775256053390",
+        "startTime": "2026-04-10T12:00",
+        "isCancelled": false
+    }
+]
