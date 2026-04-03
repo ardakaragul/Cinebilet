@@ -15,6 +15,7 @@
         <nav>
             <a href="#">Ana Sayfa</a>
             <a href="#" id="my-tickets-btn">Biletlerim</a>
+            <a href="#" id="admin-btn" style="color: #e50914;">Yönetici Paneli</a>
             <a href="#" id="login-btn">Giriş Yap</a>
         </nav>
     </header>
@@ -25,7 +26,7 @@
         <div id="movies-container" class="movies-grid">
         </div>
     </main>
-<div id="auth-modal" class="modal-overlay">
+    <div id="auth-modal" class="modal-overlay">
         <div class="modal-content">
             <span class="close-btn" onclick="closeAuthModal()">&times;</span>
             <h2 id="modal-title">Giriş Yap</h2>
@@ -33,10 +34,10 @@
             <form id="auth-form" onsubmit="handleAuth(event)">
                 <input type="text" id="auth-name" placeholder="Ad Soyad" style="display: none;">
                 <input type="text" id="auth-phone" placeholder="Telefon Numarası" style="display: none;">
-                
+
                 <input type="email" id="auth-email" placeholder="E-posta" required>
                 <input type="password" id="auth-password" placeholder="Şifre" required>
-                
+
                 <button type="submit" id="auth-submit-btn" class="buy-btn">Giriş Yap</button>
             </form>
 
@@ -49,43 +50,74 @@
         <div class="modal-content" style="width: 500px;">
             <span class="close-btn" onclick="closeSeatModal()">&times;</span>
             <h2 style="margin-bottom: 20px;">Koltuk Seçimi</h2>
-            
+
             <div class="screen">SİNEMA PERDESİ</div>
-            
+
             <div id="seat-container" class="seat-container">
-                </div>
-            
-            <div class="legend">
-                <div class="seat-info"><div class="seat"></div> Boş</div>
-                <div class="seat-info"><div class="seat selected"></div> Seçili</div>
-                <div class="seat-info"><div class="seat sold"></div> Dolu</div>
             </div>
-            
+
+            <div class="legend">
+                <div class="seat-info">
+                    <div class="seat"></div> Boş
+                </div>
+                <div class="seat-info">
+                    <div class="seat selected"></div> Seçili
+                </div>
+                <div class="seat-info">
+                    <div class="seat sold"></div> Dolu
+                </div>
+            </div>
+
             <button id="confirm-ticket-btn" class="buy-btn" style="margin-top: 30px;">Bileti Al</button>
         </div>
     </div>
     <div id="profile-modal" class="modal-overlay">
-    <div class="modal-content" style="width: 600px;">
-        <span class="close-btn" onclick="closeProfileModal()">&times;</span>
-        <h2>Profilim ve Biletlerim</h2>
+        <div class="modal-content" style="width: 600px;">
+            <span class="close-btn" onclick="closeProfileModal()">&times;</span>
+            <h2>Profilim ve Biletlerim</h2>
 
-        <div class="profile-section">
-            <h3 style="text-align: left; margin-bottom: 15px;">Bilgilerim</h3>
-            <form id="profile-form" onsubmit="updateProfile(event)">
-                <input type="text" id="profile-name" required>
-                <input type="email" id="profile-email" required>
-                <input type="text" id="profile-phone" required>
-                <button type="submit" class="buy-btn" style="background-color: #28a745;">Güncelle</button>
-            </form>
-            <button onclick="deleteAccount()" class="buy-btn" style="background-color: #dc3545; margin-top: 10px;">Hesabımı Sil</button>
-        </div>
+            <div class="profile-section">
+                <h3 style="text-align: left; margin-bottom: 15px;">Bilgilerim</h3>
+                <form id="profile-form" onsubmit="updateProfile(event)">
+                    <input type="text" id="profile-name" required>
+                    <input type="email" id="profile-email" required>
+                    <input type="text" id="profile-phone" required>
+                    <button type="submit" class="buy-btn" style="background-color: #28a745;">Güncelle</button>
+                </form>
+                <button onclick="deleteAccount()" class="buy-btn"
+                    style="background-color: #dc3545; margin-top: 10px;">Hesabımı Sil</button>
+            </div>
 
-        <div class="tickets-section" style="margin-top: 30px; text-align: left;">
-            <h3 style="margin-bottom: 15px;">Biletlerim</h3>
-            <div id="tickets-container" class="tickets-grid"></div>
+            <div class="tickets-section" style="margin-top: 30px; text-align: left;">
+                <h3 style="margin-bottom: 15px;">Biletlerim</h3>
+                <div id="tickets-container" class="tickets-grid"></div>
+            </div>
         </div>
     </div>
-</div>
+    <div id="admin-modal" class="modal-overlay">
+        <div class="modal-content" style="width: 700px; max-height: 80vh; overflow-y: auto;">
+            <span class="close-btn" onclick="closeAdminModal()">&times;</span>
+            <h2>Yönetici Paneli</h2>
+
+            <div style="margin-top: 20px; text-align: left;">
+                <h3 style="color: #e50914;">Yeni Film Ekle</h3>
+                <form id="add-movie-form" onsubmit="addMovie(event)"
+                    style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
+                    <input type="text" id="new-movie-title" placeholder="Film Adı" required>
+                    <input type="text" id="new-movie-director" placeholder="Yönetmen" required>
+                    <input type="number" id="new-movie-duration" placeholder="Süre (Dakika)" required>
+                    <input type="url" id="new-movie-poster" placeholder="Afiş Linki (URL)" required>
+                    <button type="submit" class="buy-btn">Filmi Sisteme Ekle</button>
+                </form>
+            </div>
+
+            <div style="margin-top: 40px; text-align: left;">
+                <h3>Sistemdeki Filmler</h3>
+                <div id="admin-movies-list" style="margin-top: 15px; display: flex; flex-direction: column; gap: 10px;">
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="app.js"></script>
 </body>
 
