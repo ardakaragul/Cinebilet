@@ -25,7 +25,26 @@
         <div id="movies-container" class="movies-grid">
         </div>
     </main>
+<div id="auth-modal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeAuthModal()">&times;</span>
+            <h2 id="modal-title">Giriş Yap</h2>
 
+            <form id="auth-form" onsubmit="handleAuth(event)">
+                <input type="text" id="auth-name" placeholder="Ad Soyad" style="display: none;">
+                <input type="text" id="auth-phone" placeholder="Telefon Numarası" style="display: none;">
+                
+                <input type="email" id="auth-email" placeholder="E-posta" required>
+                <input type="password" id="auth-password" placeholder="Şifre" required>
+                
+                <button type="submit" id="auth-submit-btn" class="buy-btn">Giriş Yap</button>
+            </form>
+
+            <p id="auth-toggle-text">
+                Hesabın yok mu? <a href="#" onclick="toggleAuthMode()">Kayıt Ol</a>
+            </p>
+        </div>
+    </div>
     <script src="app.js"></script>
 </body>
 
