@@ -14,6 +14,13 @@
 
 ---
 
+## Proje Linkleri
+
+* **REST API Adresi:** [Tıklayın](https://cinebilet.onrender.com)
+* **Web Frontend Adresi:** [Tıklayın](https://cinebilet.netlify.app/)
+
+---
+
 ## Proje Ekibi
 
 **Grup Adı:** > Akare
