@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function fetchMovies() {
     try {
-        const response = await fetch('http://localhost:3000/movies');
+        const response = await fetch('https://cinebilet.onrender.com/movies');
         const movies = await response.json();
 
         const container = document.getElementById('movies-container');
@@ -88,7 +88,7 @@ async function handleAuth(event) {
         const phone = document.getElementById('auth-phone').value;
 
         try {
-            const response = await fetch('http://localhost:3000/auth/register', {
+            const response = await fetch('https://cinebilet.onrender.com/auth/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, email, password, phone })
@@ -166,7 +166,7 @@ async function loadSeats(sessionId) {
 
     try {
 
-        const response = await fetch(`http://localhost:3000/sessions/${sessionId}/seats`);
+        const response = await fetch(`https://cinebilet.onrender.com/sessions/${sessionId}/seats`);
         const data = await response.json();
         const soldSeats = data.soldSeats || [];
 
@@ -220,7 +220,7 @@ document.getElementById('confirm-ticket-btn').addEventListener('click', async ()
 
     try {
 
-        const response = await fetch('http://localhost:3000/tickets', {
+        const response = await fetch('https://cinebilet.onrender.com/tickets', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ userId, sessionId: currentSessionId, seatNumber: selectedSeatNumber })
@@ -259,7 +259,7 @@ function closeProfileModal() {
 
 async function loadProfile(userId) {
     try {
-        const response = await fetch(`http://localhost:3000/profile?userId=${userId}`);
+        const response = await fetch(`https://cinebilet.onrender.com/profile?userId=${userId}`);
         if (response.ok) {
             const data = await response.json();
             document.getElementById('profile-name').value = data.name || '';
@@ -276,7 +276,7 @@ async function loadTickets(userId) {
     container.innerHTML = '<p>Biletler yükleniyor...</p>';
 
     try {
-        const response = await fetch(`http://localhost:3000/tickets?userId=${userId}`);
+        const response = await fetch(`https://cinebilet.onrender.com/tickets?userId=${userId}`);
         if (response.ok) {
             const tickets = await response.json();
             container.innerHTML = '';
@@ -311,7 +311,7 @@ async function updateProfile(event) {
     const phone = document.getElementById('profile-phone').value;
 
     try {
-        const response = await fetch(`http://localhost:3000/profile?userId=${userId}`, {
+        const response = await fetch(`https://cinebilet.onrender.com/profile?userId=${userId}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name, email, phone })
@@ -333,7 +333,7 @@ async function cancelTicket(ticketId) {
     if (!confirm("Bu bileti iptal etmek istediğinize emin misiniz?")) return;
 
     try {
-        const response = await fetch(`http://localhost:3000/tickets/${ticketId}`, {
+        const response = await fetch(`https://cinebilet.onrender.com/tickets/${ticketId}`, {
             method: 'DELETE'
         });
 
@@ -354,7 +354,7 @@ async function deleteAccount() {
     const userId = localStorage.getItem('userId');
 
     try {
-        const response = await fetch(`http://localhost:3000/profile?userId=${userId}`, {
+        const response = await fetch(`https://cinebilet.onrender.com/profile?userId=${userId}`, {
             method: 'DELETE'
         });
 
@@ -386,7 +386,7 @@ async function addMovie(event) {
     const posterUrl = document.getElementById('new-movie-poster').value;
 
     try {
-        const response = await fetch('http://localhost:3000/movies', {
+        const response = await fetch('https://cinebilet.onrender.com/movies', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ title, director, durationMinutes: parseInt(durationMinutes), posterUrl })
@@ -411,7 +411,7 @@ async function loadAdminMovies() {
     container.innerHTML = '<p>Filmler yükleniyor...</p>';
 
     try {
-        const response = await fetch('http://localhost:3000/movies');
+        const response = await fetch('https://cinebilet.onrender.com/movies');
         const movies = await response.json();
         container.innerHTML = '';
 
@@ -432,7 +432,7 @@ async function deleteMovie(movieId) {
     if (!confirm("Bu filmi sistemden tamamen silmek istediğinize emin misiniz? Tüm afişler ve veriler yok olacak!")) return;
 
     try {
-        const response = await fetch(`http://localhost:3000/movies/${movieId}`, {
+        const response = await fetch(`https://cinebilet.onrender.com/movies/${movieId}`, {
             method: 'DELETE'
         });
 
@@ -451,7 +451,7 @@ async function addHall(event) {
     const capacity = document.getElementById('hall-capacity').value;
 
     try {
-        const response = await fetch('http://localhost:3000/halls', {
+        const response = await fetch('https://cinebilet.onrender.com/halls', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name, capacity: parseInt(capacity) })
@@ -470,7 +470,7 @@ async function addSession(event) {
     const startTime = document.getElementById('session-time').value;
 
     try {
-        const response = await fetch('http://localhost:3000/sessions', {
+        const response = await fetch('https://cinebilet.onrender.com', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ movieId, hallId, startTime })
