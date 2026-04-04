@@ -469,8 +469,8 @@ async function addSession(event) {
     const hallId = document.getElementById('session-hall-id').value;
     const startTime = document.getElementById('session-time').value;
 
-    try {
-        const response = await fetch('http://localhost:3000/sessions', {
+    try {        
+        const response = await fetch('https://cinebilet.onrender.com/sessions', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ movieId, hallId, startTime })
