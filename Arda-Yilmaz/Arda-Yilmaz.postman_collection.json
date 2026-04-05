@@ -1,0 +1,286 @@
+{
+  "info": {
+    "_postman_id": "b2c3d4e5-f6a7-8b9c-0d1e-2f3a4b5c6d7e",
+    "name": "Arda Yilmaz - Postman Video Koleksiyonu",
+    "description": "Sinema bilet sistemi musteri islemlerini (kayit, bilet alma, iptal etme, profil yonetimi) video sirasi ile test eder. İslemler birbirine baglidir, kayit sonrasi alinan User ID ve bilet sonrasi alinan Ticket ID otomatik olarak diger isteklere aktarilir.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "if (!pm.collectionVariables.get('runId')) {",
+          "  pm.collectionVariables.set('runId', Date.now().toString());",
+          "}"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://cinebilet.onrender.com",
+      "type": "string"
+    },
+    {
+      "key": "runId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "userToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "userId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "ticketId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "sessionId",
+      "value": "60d5ecb8b392d700153f3a99",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "01 Kullanici Kaydi Olusturma",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/auth/register",
+        "description": "Arda Gereksinimi 9: Yeni bir musteri hesabi olusturur.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Ahmet Test {{runId}}\",\n  \"email\": \"ahmet_{{runId}}@example.com\",\n  \"password\": \"GuvenliSifre123\",\n  \"phone\": \"05551234567\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "00 Giris Yap (Token ve ID Alma)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/auth/login",
+        "description": "Otomasyon Adimi: Yeni kayit olan hesaba giris yapip testler icin User ID ve Token'i hafizaya alir.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"ahmet_{{runId}}@example.com\",\n  \"password\": \"GuvenliSifre123\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const json = pm.response.json();",
+              "pm.collectionVariables.set('userToken', json.token);",
+              "pm.collectionVariables.set('userId', json.user.id || json.user._id);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 Kullanici Bilgilerini Goruntuleme",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/users/{{userId}}",
+        "description": "Arda Gereksinimi 10: Giris yapan musterinin detayli profil bilgilerini dondurur.",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{userToken}}",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "03 Kullanici Bilgilerini Guncelleme",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/users/{{userId}}",
+        "description": "Arda Gereksinimi 11: Musterinin telefon numarasini ve ismini gunceller.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Ahmet Test Guncel {{runId}}\",\n  \"phone\": \"05559876543\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{userToken}}",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "04 Musait Koltuklari Goruntuleme",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/sessions/{{sessionId}}/seats",
+        "description": "Arda Gereksinimi 16: Bilet alinacak seansin bos/dolu koltuk durumunu getirir."
+      },
+      "response": []
+    },
+    {
+      "name": "05 Bilet Satin Alma",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/tickets",
+        "description": "Arda Gereksinimi 13: Secilen koltuk numarasi ile odeme islemini tamamlayip bilet olusturur. Ticket ID'yi hafizaya alir.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"userId\": \"{{userId}}\",\n  \"sessionId\": \"{{sessionId}}\",\n  \"seatNumber\": \"C4\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{userToken}}",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const json = pm.response.json();",
+              "pm.collectionVariables.set('ticketId', json._id || json.id);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "06 Biletleri Listeleme",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/users/{{userId}}/tickets",
+        "description": "Arda Gereksinimi 14: Musterinin az once satin aldigi biletleri listeler.",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{userToken}}",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "07 Bilet Iptal Etme",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{baseUrl}}/tickets/{{ticketId}}",
+        "description": "Arda Gereksinimi 15: Satin alinan bileti iptal edip koltugu bosa cikarir.",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{userToken}}",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "08 Kullanici Hesabini Kapatma",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{baseUrl}}/users/{{userId}}",
+        "description": "Arda Gereksinimi 12: Testi tamamlayan kullanicinin hesabini sistemden tamamen siler.",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{userToken}}",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
