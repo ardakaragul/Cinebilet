@@ -259,7 +259,11 @@ function closeProfileModal() {
 
 async function loadProfile(userId) {
     try {
-        const response = await fetch(`https://cinebilet.onrender.com/profile?userId=${userId}`);
+
+
+        const response = await fetch(`https://cinebilet.onrender.com/users/${userId}`);
+
+
         if (response.ok) {
             const data = await response.json();
             document.getElementById('profile-name').value = data.name || '';
@@ -276,7 +280,11 @@ async function loadTickets(userId) {
     container.innerHTML = '<p>Biletler yükleniyor...</p>';
 
     try {
-        const response = await fetch(`https://cinebilet.onrender.com/tickets?userId=${userId}`);
+
+
+        const response = await fetch(`https://cinebilet.onrender.com/users/${userId}/tickets`);
+
+
         if (response.ok) {
             const tickets = await response.json();
             container.innerHTML = '';
