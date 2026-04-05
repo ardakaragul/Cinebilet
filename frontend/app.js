@@ -319,7 +319,11 @@ async function updateProfile(event) {
     const phone = document.getElementById('profile-phone').value;
 
     try {
-        const response = await fetch(`https://cinebilet.onrender.com/profile?userId=${userId}`, {
+
+
+        const response = await fetch(`https://cinebilet.onrender.com/users/${userId}`, {
+
+
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name, email, phone })
@@ -362,7 +366,11 @@ async function deleteAccount() {
     const userId = localStorage.getItem('userId');
 
     try {
-        const response = await fetch(`https://cinebilet.onrender.com/profile?userId=${userId}`, {
+
+
+        const response = await fetch(`https://cinebilet.onrender.com/users/${userId}`, {
+
+
             method: 'DELETE'
         });
 
