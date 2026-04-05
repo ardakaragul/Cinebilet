@@ -1,6 +1,6 @@
 # Mevlüt Arda Karagül'ün REST API Metotları
 
-**API Test Videosu:** [Link](https://example.com)
+**API Test Videosu:** [Youtube Videosu](https://www.youtube.com/watch?v=K69SavbNvMY)
 
 ## 1. Yeni Film Ekleme
 - **Endpoint:** `POST /movies`

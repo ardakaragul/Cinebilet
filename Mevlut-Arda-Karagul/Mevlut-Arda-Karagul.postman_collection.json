@@ -1,0 +1,333 @@
+{
+    "info": {
+        "_postman_id": "a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d",
+        "name": "Mevlut Arda Karagul - Postman Video Koleksiyonu",
+        "description": "Sinema bilet sistemi yonetici (admin) islemlerini (film, salon, seans yonetimi) video sirasi ile test eder. İslemler birbirine baglidir, onceki adimlardan donen ID'ler otomatik olarak sonraki adimlarda kullanilir.",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "event": [
+        {
+            "listen": "prerequest",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    "if (!pm.collectionVariables.get('runId')) {",
+                    "  pm.collectionVariables.set('runId', Date.now().toString());",
+                    "}"
+                ]
+            }
+        }
+    ],
+    "variable": [
+        {
+            "key": "baseUrl",
+            "value": "https://cinebilet.onrender.com",
+            "type": "string"
+        },
+        {
+            "key": "runId",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "adminToken",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "movieId",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "hallId",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "sessionId",
+            "value": "",
+            "type": "string"
+        }
+    ],
+    "item": [
+        {
+            "name": "00 Yonetici Giris Yap",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "url": "{{baseUrl}}/auth/login",
+                "description": "Yonetici yetkisine sahip hesabın token bilgisini alir ve saklar. (Email/Sifre kismini kendi veritabanindaki admin hesabiyla degistirebilirsin).",
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"email\": \"admin@cinebilet.com\",\n  \"password\": \"admin123\"\n}",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    }
+                }
+            },
+            "response": [],
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                            "const json = pm.response.json();",
+                            "pm.collectionVariables.set('adminToken', json.token);"
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "01 Yeni Film Ekle",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "url": "{{baseUrl}}/movies",
+                "description": "Mevlut Gereksinimi 1: Yeni film olusturur ve donen Film ID'sini hafizaya alir.",
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"title\": \"Inception Test {{runId}}\",\n  \"director\": \"Christopher Nolan\",\n  \"durationMinutes\": 148,\n  \"posterUrl\": \"https://example.com/inception.jpg\"\n}",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    }
+                },
+                "auth": {
+                    "type": "bearer",
+                    "bearer": [
+                        {
+                            "key": "token",
+                            "value": "{{adminToken}}",
+                            "type": "string"
+                        }
+                    ]
+                }
+            },
+            "response": [],
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                            "const json = pm.response.json();",
+                            "pm.collectionVariables.set('movieId', json._id || json.id);"
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "02 Filmleri Listele",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": "{{baseUrl}}/movies",
+                "description": "Mevlut Gereksinimi 2: Sistemdeki tum filmleri getirir."
+            },
+            "response": []
+        },
+        {
+            "name": "03 Film Bilgilerini Guncelle",
+            "request": {
+                "method": "PUT",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "url": "{{baseUrl}}/movies/{{movieId}}",
+                "description": "Mevlut Gereksinimi 3: Olusturulan filmin adini ve suresini gunceller.",
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"title\": \"Inception: Director's Cut {{runId}}\",\n  \"durationMinutes\": 160\n}",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    }
+                },
+                "auth": {
+                    "type": "bearer",
+                    "bearer": [
+                        {
+                            "key": "token",
+                            "value": "{{adminToken}}",
+                            "type": "string"
+                        }
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "04 Sinema Salonu Ekle",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "url": "{{baseUrl}}/halls",
+                "description": "Mevlut Gereksinimi 5: Yeni salon olusturur ve Salon ID'sini seans icin hafizaya alir.",
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"name\": \"Salon IMAX {{runId}}\",\n  \"capacity\": 120\n}",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    }
+                },
+                "auth": {
+                    "type": "bearer",
+                    "bearer": [
+                        {
+                            "key": "token",
+                            "value": "{{adminToken}}",
+                            "type": "string"
+                        }
+                    ]
+                }
+            },
+            "response": [],
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                            "const json = pm.response.json();",
+                            "pm.collectionVariables.set('hallId', json._id || json.id);"
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "05 Sinema Salonlarini Listele",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": "{{baseUrl}}/halls",
+                "description": "Mevlut Gereksinimi 6: Sistemdeki kayitli tum salonlari listeler.",
+                "auth": {
+                    "type": "bearer",
+                    "bearer": [
+                        {
+                            "key": "token",
+                            "value": "{{adminToken}}",
+                            "type": "string"
+                        }
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "06 Seans Olusturma",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "url": "{{baseUrl}}/sessions",
+                "description": "Mevlut Gereksinimi 7: Olusturulan Film ve Salon'u eslestirerek yeni seans acar.",
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"movieId\": \"{{movieId}}\",\n  \"hallId\": \"{{hallId}}\",\n  \"startTime\": \"2026-04-10T20:00:00\"\n}",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    }
+                },
+                "auth": {
+                    "type": "bearer",
+                    "bearer": [
+                        {
+                            "key": "token",
+                            "value": "{{adminToken}}",
+                            "type": "string"
+                        }
+                    ]
+                }
+            },
+            "response": [],
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                            "const json = pm.response.json();",
+                            "pm.collectionVariables.set('sessionId', json._id || json.id);"
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "07 Seans Iptal Etme",
+            "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": "{{baseUrl}}/sessions/{{sessionId}}",
+                "description": "Mevlut Gereksinimi 8: Olusturulan seansi iptal eder ve siler.",
+                "auth": {
+                    "type": "bearer",
+                    "bearer": [
+                        {
+                            "key": "token",
+                            "value": "{{adminToken}}",
+                            "type": "string"
+                        }
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "08 Filmi Vizyondan Kaldirma (Silme)",
+            "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": "{{baseUrl}}/movies/{{movieId}}",
+                "description": "Mevlut Gereksinimi 4: Test icin en basta olusturulan filmi sistemden tamamen siler.",
+                "auth": {
+                    "type": "bearer",
+                    "bearer": [
+                        {
+                            "key": "token",
+                            "value": "{{adminToken}}",
+                            "type": "string"
+                        }
+                    ]
+                }
+            },
+            "response": []
+        }
+    ]
+}

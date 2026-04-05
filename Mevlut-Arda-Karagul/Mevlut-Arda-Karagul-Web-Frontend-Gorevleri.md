@@ -1,8 +1,8 @@
 # Mevlüt Arda Karagül'ün Web Frontend Görevleri 
 
-**Front-end Test Videosu:** [Link](https://example.com)
+**Front-end Test Videosu:** [Youtube Videosu](https://www.youtube.com/watch?v=YkrriPNrKkQ)
 
-Bu dokümanda Mevlüt Arda Karagül'ün sorumluluğunda olan yönetici (admin) arayüzüne ait sistem yapılandırmaları, veri yönetimi ve UI bileşenleri detaylandırılmıştır. (Gereksinimler 1-8)
+Bu dokümanda Mevlüt Arda Karagül'ün sorumluluğunda olan yönetici (admin) arayüzüne ait sistem yapılandırmaları, veri yönetimi ve UI bileşenleri detaylandırılmıştır. 
 
 ## 1. Film Ekleme Ekranı
 - **Gereksinim:** `POST /movies` entegrasyonu.
