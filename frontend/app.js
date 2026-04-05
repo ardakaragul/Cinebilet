@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', () => {
     fetchMovies();
 });
@@ -36,21 +35,16 @@ async function fetchMovies() {
     }
 }
 
-
-
 let isRegisterMode = false;
-
 
 document.getElementById('login-btn').addEventListener('click', (e) => {
     e.preventDefault();
     document.getElementById('auth-modal').style.display = 'flex';
 });
 
-
 function closeAuthModal() {
     document.getElementById('auth-modal').style.display = 'none';
 }
-
 
 function toggleAuthMode() {
     isRegisterMode = !isRegisterMode;
@@ -75,7 +69,6 @@ function toggleAuthMode() {
     }
 }
 
-
 async function handleAuth(event) {
     event.preventDefault();
 
@@ -83,7 +76,6 @@ async function handleAuth(event) {
     const password = document.getElementById('auth-password').value;
 
     if (isRegisterMode) {
-
         const name = document.getElementById('auth-name').value;
         const phone = document.getElementById('auth-phone').value;
 
@@ -110,13 +102,10 @@ async function handleAuth(event) {
             console.error("Bağlantı hatası:", error);
         }
     } else {
-
-
         alert("Giriş başarılı! (Simülasyon)");
         closeAuthModal();
     }
 }
-
 
 document.addEventListener('DOMContentLoaded', () => {
     const userName = localStorage.getItem('userName');
@@ -133,14 +122,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-
 let currentSessionId = "12345";
 let selectedSeatNumber = null;
 
-
 async function buyTicket(movieId) {
     const userId = localStorage.getItem('userId');
-
 
     if (!userId) {
         alert("Bilet almak için önce giriş yapmalısın!");
@@ -148,24 +134,20 @@ async function buyTicket(movieId) {
         return;
     }
 
-
     document.getElementById('seat-modal').style.display = 'flex';
     await loadSeats(currentSessionId);
 }
-
 
 function closeSeatModal() {
     document.getElementById('seat-modal').style.display = 'none';
     selectedSeatNumber = null;
 }
 
-
 async function loadSeats(sessionId) {
     const container = document.getElementById('seat-container');
     container.innerHTML = '';
 
     try {
-
         const response = await fetch(`https://cinebilet.onrender.com/sessions/${sessionId}/seats`);
         const data = await response.json();
         const soldSeats = data.soldSeats || [];
@@ -180,11 +162,9 @@ async function loadSeats(sessionId) {
                 const seatDiv = document.createElement('div');
                 seatDiv.classList.add('seat');
 
-
                 if (isSold) {
                     seatDiv.classList.add('sold');
                 }
-
 
                 seatDiv.onclick = () => selectSeat(seatDiv, seatNumber, isSold);
 
@@ -196,19 +176,15 @@ async function loadSeats(sessionId) {
     }
 }
 
-
 function selectSeat(seatElement, seatNumber, isSold) {
     if (isSold) return;
-
 
     const previouslySelected = document.querySelector('.seat.selected');
     if (previouslySelected) previouslySelected.classList.remove('selected');
 
-
     seatElement.classList.add('selected');
     selectedSeatNumber = seatNumber;
 }
-
 
 document.getElementById('confirm-ticket-btn').addEventListener('click', async () => {
     if (!selectedSeatNumber) {
@@ -219,7 +195,6 @@ document.getElementById('confirm-ticket-btn').addEventListener('click', async ()
     const userId = localStorage.getItem('userId');
 
     try {
-
         const response = await fetch('https://cinebilet.onrender.com/tickets', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -238,6 +213,7 @@ document.getElementById('confirm-ticket-btn').addEventListener('click', async ()
         console.error("Bilet alınırken hata:", error);
     }
 });
+
 document.getElementById('my-tickets-btn').addEventListener('click', async (e) => {
     e.preventDefault();
     const userId = localStorage.getItem('userId');
@@ -368,7 +344,9 @@ async function deleteAccount() {
     try {
 
 
+
         const response = await fetch(`https://cinebilet.onrender.com/users/${userId}`, {
+
 
 
             method: 'DELETE'
@@ -384,10 +362,12 @@ async function deleteAccount() {
         console.error(error);
     }
 }
+
 document.getElementById('admin-btn').addEventListener('click', async (e) => {
     e.preventDefault();
     document.getElementById('admin-modal').style.display = 'flex';
     await loadAdminMovies();
+    await loadAdminHalls();
 });
 
 function closeAdminModal() {
@@ -435,7 +415,10 @@ async function loadAdminMovies() {
             container.innerHTML += `
                 <div class="admin-movie-item">
                     <span style="color: white; font-weight: bold;">${movie.title} <span style="color: #aaa; font-weight: normal; font-size: 13px;">(${movie.durationMinutes} dk)</span></span>
-                    <button onclick="deleteMovie('${movie.id}')" class="cancel-btn">Filmi Sil</button>
+                    <div>
+                        <button onclick="editMovie('${movie.id}', '${movie.title}')" class="buy-btn" style="background-color: #007bff; padding: 6px 12px; margin-right: 10px; display: inline-block; width: auto;">Düzenle</button>
+                        <button onclick="deleteMovie('${movie.id}')" class="cancel-btn">Filmi Sil</button>
+                    </div>
                 </div>
             `;
         });
@@ -461,6 +444,7 @@ async function deleteMovie(movieId) {
         console.error(error);
     }
 }
+
 async function addHall(event) {
     event.preventDefault();
     const name = document.getElementById('hall-name').value;
@@ -474,6 +458,7 @@ async function addHall(event) {
         });
         if (response.ok) {
             alert("Yeni salon başarıyla oluşturuldu!");
+            await loadAdminHalls();
             event.target.reset();
         }
     } catch (error) { console.error(error); }
@@ -484,7 +469,9 @@ async function addSession(event) {
     const movieId = document.getElementById('session-movie-id').value;
     const hallId = document.getElementById('session-hall-id').value;
     const startTime = document.getElementById('session-time').value;
+
     try {        
+
         const response = await fetch('https://cinebilet.onrender.com/sessions', {
 
             method: 'POST',
@@ -496,4 +483,93 @@ async function addSession(event) {
             event.target.reset();
         }
     } catch (error) { console.error(error); }
+}
+
+async function editMovie(movieId, oldTitle) {
+    const newTitle = prompt(`"${oldTitle}" filminin YENİ ADINI girin:\n(Değiştirmek istemiyorsanız boş bırakın)`);
+    if (newTitle === null) return;
+
+    const newDirector = prompt("YENİ YÖNETMENİ girin:\n(Değiştirmek istemiyorsanız boş bırakın)");
+    const newDuration = prompt("YENİ SÜREYİ (dakika olarak) girin:\n(Değiştirmek istemiyorsanız boş bırakın)");
+    const newPoster = prompt("YENİ AFİŞ LİNKİNİ girin:\n(Değiştirmek istemiyorsanız boş bırakın)");
+
+    const updateData = {};
+    if (newTitle) updateData.title = newTitle;
+    if (newDirector) updateData.director = newDirector;
+    if (newDuration) updateData.durationMinutes = parseInt(newDuration);
+    if (newPoster) updateData.posterUrl = newPoster;
+
+    if (Object.keys(updateData).length === 0) {
+        alert("Hiçbir değişiklik yapmadınız.");
+        return;
+    }
+
+    try {
+        const response = await fetch(`https://cinebilet.onrender.com/movies/${movieId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updateData)
+        });
+
+        if (response.ok) {
+            alert("Film bilgileri başarıyla güncellendi! 🎬");
+            await loadAdminMovies();
+            fetchMovies();
+        } else {
+            alert("Film güncellenirken bir hata oluştu.");
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function loadAdminHalls() {
+    const container = document.getElementById('admin-halls-list');
+    if (!container) return;
+    container.innerHTML = '<span style="color:#aaa;">Salonlar yükleniyor...</span>';
+
+    try {
+        const response = await fetch('https://cinebilet.onrender.com/halls');
+        const halls = await response.json();
+
+        container.innerHTML = '<strong style="color:#28a745; display:block; margin-bottom:5px;">Kayıtlı Salonlar:</strong>';
+
+        halls.forEach(hall => {
+            container.innerHTML += `
+                <div style="padding: 5px 0; border-bottom: 1px solid #444;">
+                    <strong>${hall.name}</strong> (Kapasite: ${hall.capacity})<br>
+                    <span style="color:#aaa; font-size:11px;">Kopyalanacak ID: <strong>${hall.id}</strong></span>
+                </div>
+            `;
+        });
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+// YÖNETİCİ - SEANS İPTAL ETME
+async function cancelAdminSession() {
+    const sessionId = document.getElementById('cancel-session-id').value.trim();
+
+    if (!sessionId) {
+        alert("Lütfen iptal edilecek Seans ID'sini girin!");
+        return;
+    }
+
+    if (!confirm(`"${sessionId}" ID'li seansı iptal etmek istediğinize emin misiniz?`)) return;
+
+    try {
+        const response = await fetch(`https://cinebilet.onrender.com/sessions/${sessionId}`, {
+            method: 'DELETE'
+        });
+
+        if (response.ok) {
+            alert("Seans başarıyla iptal edildi! 🗑️");
+            document.getElementById('cancel-session-id').value = ''; 
+        } else {
+            alert("İptal başarısız oldu. Hatalı bir Seans ID'si girmiş olabilirsiniz.");
+        }
+    } catch (error) {
+        console.error(error);
+    }
 }
