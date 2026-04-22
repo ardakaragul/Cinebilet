@@ -110,6 +110,10 @@ async function handleAuth(event) {
 document.addEventListener('DOMContentLoaded', () => {
     const userName = localStorage.getItem('userName');
     const loginBtn = document.getElementById('login-btn');
+    const adminBtn = document.getElementById('admin-btn');
+
+
+    if (adminBtn) adminBtn.style.display = 'none';
 
     if (userName) {
         loginBtn.innerText = "Çıkış Yap (" + userName + ")";
@@ -119,6 +123,11 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.removeItem('userId');
             location.reload();
         };
+
+
+        if (userName === "Arda Karagül") {
+            adminBtn.style.display = 'inline-block';
+        }
     }
 });
 
@@ -365,6 +374,29 @@ async function deleteAccount() {
 
 document.getElementById('admin-btn').addEventListener('click', async (e) => {
     e.preventDefault();
+
+
+    const currentUserName = localStorage.getItem('userName');
+    if (currentUserName !== "Arda Karagül") {
+        alert("Erişim Reddedildi: Bu alana sadece Kurucu Yönetici girebilir! 🚨");
+        return;
+    }
+
+
+    const adminEmail = prompt("Güvenlik Duvarı 1/2: Lütfen Yönetici E-posta Adresini Girin:");
+    if (adminEmail === null || btoa(adminEmail) !== "YWRtaW5AY2luZWJpbGV0LmNvbQ==") {
+        alert("Hatalı E-posta! Yetkisiz giriş denemesi engellendi. 🛑");
+        return;
+    }
+
+
+    const adminPassword = prompt("Güvenlik Duvarı 2/2: Lütfen Yönetici Şifresini Girin:");
+    if (adminPassword === null || btoa(adminPassword) !== "cGF0cm9uMTIz") {
+        alert("Hatalı Şifre! Yetkisiz giriş denemesi engellendi. 🛑");
+        return;
+    }
+
+
     document.getElementById('admin-modal').style.display = 'flex';
     await loadAdminMovies();
     await loadAdminHalls();
@@ -470,7 +502,7 @@ async function addSession(event) {
     const hallId = document.getElementById('session-hall-id').value;
     const startTime = document.getElementById('session-time').value;
 
-    try {        
+    try {
 
         const response = await fetch('https://cinebilet.onrender.com/sessions', {
 
@@ -565,7 +597,7 @@ async function cancelAdminSession() {
 
         if (response.ok) {
             alert("Seans başarıyla iptal edildi! 🗑️");
-            document.getElementById('cancel-session-id').value = ''; 
+            document.getElementById('cancel-session-id').value = '';
         } else {
             alert("İptal başarısız oldu. Hatalı bir Seans ID'si girmiş olabilirsiniz.");
         }
